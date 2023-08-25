@@ -1,6 +1,8 @@
 import { Model, Schema, model } from 'mongoose'
 import { IUser } from './user.interface'
 import { userRole } from './user.constant'
+import config from '../../../config'
+import bcrypt from 'bcrypt'
 
 /* step two --> Create schema */
 
@@ -30,6 +32,14 @@ const userSchema = new Schema<IUser>(
     },
   }
 )
+
+userSchema.pre('save', async function () {
+  // this.password means the user password
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_rounds)
+  )
+})
 
 /* step three --> Create class-oriented model */
 

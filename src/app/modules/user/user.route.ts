@@ -4,11 +4,7 @@ import validateZodRequest from '../../middlewares/validateZodRequest'
 import { userValidation } from './user.zod.validation'
 const router = express.Router()
 
-router.post(
-  '/signup',
-  validateZodRequest(userValidation.userZodSchema),
-  userController.createNewUser
-)
+/* create-user-route is attached to auth route but controller and service are attached to the user-controller and user-service*/
 
 router.patch(
   '/:id',
