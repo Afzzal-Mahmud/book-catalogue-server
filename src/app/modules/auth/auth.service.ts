@@ -12,7 +12,7 @@ import {
   verifyJsonWebToken,
 } from '../../../shared/JWT/jwt.token.helper'
 import { User } from '../user/user.model'
-import { passwordMatched } from '../../../shared/methods/methods.shared.fn'
+import { passwordMatched } from '../../../shared/bycript/bycript.methods'
 
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { email, password } = payload

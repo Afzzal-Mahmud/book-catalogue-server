@@ -2,7 +2,6 @@ import { Server } from 'http'
 import mongoose from 'mongoose'
 import app from './app'
 import config from './config/index'
-import { errorLogger, successLogger } from './shared/logger'
 
 let server: Server
 
@@ -12,7 +11,7 @@ async function shutdown() {
       await new Promise<void>((resolve, reject) => {
         server.close(err => {
           if (err) {
-            errorLogger.error(`Error while closing server: ${err}`)
+            console.log(`Error while closing server: ${err}`)
             reject(err)
           } else {
             resolve()
@@ -22,48 +21,46 @@ async function shutdown() {
     }
 
     await mongoose.disconnect()
-    successLogger.info('Server gracefully shut down.')
+    console.log('Server gracefully shut down.')
     process.exit(0)
   } catch (error) {
-    errorLogger.error(`Error during server shutdown: ${error}`)
+    console.log(`Error during server shutdown: ${error}`)
     process.exit(1)
   }
 }
 
 process.on('SIGINT', () => {
-  successLogger.info('SIGINT is received')
+  console.log('SIGINT is received')
   shutdown()
 })
 
 process.on('SIGTERM', () => {
-  successLogger.info('SIGTERM is received')
+  console.log('SIGTERM is received')
   shutdown()
 })
 
 process.on('uncaughtException', error => {
-  successLogger.info(error)
-  successLogger.info('uncaughtException is received')
+  console.log(error)
+  console.log('uncaughtException is received')
   shutdown()
 })
 
 process.on('unhandledRejection', error => {
-  successLogger.info(error)
-  successLogger.info('unhandledRejection is received')
+  console.log(error)
+  console.log('unhandledRejection is received')
   shutdown()
 })
 
 async function main() {
   try {
     await mongoose.connect(config.database_url as string)
-    successLogger.info('Database is connected successfully')
+    console.log('Database is connected successfully')
 
     server = app.listen(config.port, () => {
-      successLogger.info(
-        `Digital CowHut Application listening on port ${config.port}`
-      )
+      console.log(`Digital CowHut Application listening on port ${config.port}`)
     })
   } catch (error) {
-    errorLogger.error('Failed to connect to the database', error)
+    console.log('Failed to connect to the database', error)
   }
 }
 

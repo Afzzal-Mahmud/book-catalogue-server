@@ -20,6 +20,15 @@ const getEveryBook = async (): Promise<IGenericResponseOnGet<IBook[]>> => {
   }
 }
 
+const getSingleBook = async (_id: string): Promise<IBook | null> => {
+  const isBookExist = await Book.findOne({ _id })
+  if (!isBookExist) {
+    throw new ApiErrors(404, 'Book not found')
+  }
+  const result = isBookExist
+  return result
+}
+
 const updateBookInfo = async (
   _id: string,
   payload: Partial<IBook>
@@ -47,7 +56,7 @@ const postBookReview = async (
   if (!isBookExist) {
     throw new ApiErrors(404, 'Book not found')
   }
-
+  console.log(payload, 'review from frontend')
   if (payload.review && Array.isArray(payload.review)) {
     // Initialize the review array if it doesn't exist
     if (!isBookExist.review) {
@@ -66,6 +75,7 @@ const postBookReview = async (
 export const bookServices = {
   createNewBook,
   getEveryBook,
+  getSingleBook,
   updateBookInfo,
   postBookReview,
 }

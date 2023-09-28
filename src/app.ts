@@ -4,11 +4,12 @@ import cookieParser from 'cookie-parser'
 import globalErrorHandler from './app/middlewares/globalErrorHandler'
 import { mainRoutes } from './app/routes'
 import { handleNotFoundRoute } from './errors/handleNotFound'
+import { corsOptions } from './corsConfig/corsOptions'
 
 const app: Application = express()
 
 // Middleware
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())

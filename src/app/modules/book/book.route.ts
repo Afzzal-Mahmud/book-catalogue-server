@@ -11,6 +11,7 @@ router.post(
 )
 
 router.get('/', bookController.getAllBooks)
+router.get('/:id', bookController.getSingleBook)
 
 // posting book review from user
 router.post(
