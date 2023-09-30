@@ -4,6 +4,11 @@ import { bookController } from './book.controller'
 import { bookValidation } from './book.zod.validation'
 const router = express.Router()
 
+// getting posted book by user
+router.get(
+  '/userbook',
+  bookController.getRefrencedBook
+)
 router.post(
   '/',
   validateZodRequest(bookValidation.bookZodSchema),
@@ -19,6 +24,7 @@ router.post(
   validateZodRequest(bookValidation.postBookReviewZodSchema),
   bookController.postBookReview
 )
+
 
 router.patch(
   '/:id',

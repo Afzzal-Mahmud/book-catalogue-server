@@ -3,6 +3,7 @@ import { catchAsync } from '../../../shared/catchAsync'
 import { sendResponse } from '../../../shared/sendResponse'
 import { IBook } from './book.interface'
 import { bookServices } from './book.service'
+import ApiErrors from '../../../errors/ApiErrors'
 
 const createNewBook = catchAsync(async (req: Request, res: Response) => {
   const { ...bookData } = req.body
@@ -23,6 +24,19 @@ const getAllBooks = catchAsync(async (req: Request, res: Response) => {
     statusCode: 200,
     success: true,
     message: 'Book retrive successfully',
+    data: result.data,
+  })
+})
+
+const getRefrencedBook = catchAsync(async (req: Request, res: Response) => {
+
+  const authorizationHeader = req.header('Authorization')?.split(" ")[1] || ''
+  const result = await bookServices.getRefrencedBook(authorizationHeader)
+
+  sendResponse<IBook[]>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Book retrive successfully which is posted by user',
     data: result.data,
   })
 })
@@ -68,6 +82,7 @@ const postBookReview = catchAsync(async (req: Request, res: Response) => {
 
 export const bookController = {
   getAllBooks,
+  getRefrencedBook,
   getSingleBook,
   createNewBook,
   updateBook,

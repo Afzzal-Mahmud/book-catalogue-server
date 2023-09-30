@@ -10,6 +10,7 @@ const BookSchema = new Schema<IBook>(
     details: { type: String, required: true },
     price: { type: Number, required: true },
     image: { type: String, required: false },
+    reference: { type: String, required: true },
     review: [{ type: String }],
   },
   {

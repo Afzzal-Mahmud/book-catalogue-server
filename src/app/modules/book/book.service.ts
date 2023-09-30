@@ -1,7 +1,11 @@
-import ApiErrors from '../../../errors/ApiErrors'
 import { IGenericResponseOnGet } from '../../../interfaces/IGenericResponseOnGet'
 import { IBook } from './book.interface'
 import { Book } from './book.model'
+import { Secret } from 'jsonwebtoken'
+import { User } from '../user/user.model'
+import ApiErrors from '../../../errors/ApiErrors'
+import { verifyJsonWebToken } from '../../../shared/JWT/jwt.token.helper'
+import config from '../../../config'
 
 const createNewBook = async (payload: IBook): Promise<IBook> => {
   try {
@@ -9,7 +13,7 @@ const createNewBook = async (payload: IBook): Promise<IBook> => {
     const book = await Book.create(bookWithEmptyReview)
     return book
   } catch (error) {
-    throw new ApiErrors(404, `Book not found${error}`)
+    throw new ApiErrors(500, `Internal Server Erro while creating book${error}`)
   }
 }
 
@@ -17,6 +21,28 @@ const getEveryBook = async (): Promise<IGenericResponseOnGet<IBook[]>> => {
   const result = await Book.find({})
   return {
     data: result,
+  }
+}
+
+const getRefrencedBook = async (accessToken: string): Promise<IGenericResponseOnGet<IBook[]>> => {
+
+  const verifiedToken = verifyJsonWebToken(
+    accessToken,
+    config.jwt.secret as Secret
+  )
+  if (!verifiedToken) {
+    new ApiErrors(403, "Unauthenticated")
+  }
+
+  const { email } = verifiedToken
+  // const isUserExist = await User.findOne({ email })
+  // if (!isUserExist) {
+  //   throw new ApiErrors(404, 'Humm..! user not found and unauthenticated')
+  // }
+
+  const result = await Book.find({ reference: email })
+  return {
+    data: result
   }
 }
 
@@ -75,6 +101,7 @@ const postBookReview = async (
 export const bookServices = {
   createNewBook,
   getEveryBook,
+  getRefrencedBook,
   getSingleBook,
   updateBookInfo,
   postBookReview,

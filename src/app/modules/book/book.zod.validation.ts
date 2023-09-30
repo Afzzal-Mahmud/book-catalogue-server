@@ -23,6 +23,9 @@ const bookZodSchema = z.object({
     image: z.string({
       required_error: 'Book Image is required',
     }),
+    reference: z.string({
+      required_error: 'Book reference is required',
+    }),
     review: z.array(z.string()).optional(),
   }),
 })
