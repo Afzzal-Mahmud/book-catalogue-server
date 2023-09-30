@@ -65,12 +65,16 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
       config.jwt.refresh_secret as Secret
     )
 
+    if (!verifiedToken) {
+      throw new ApiErrors(403, 'Unauthenticated')
+    }
+
     const { email } = verifiedToken
 
     // Check if the user exists
     const isUserExist = await User.findOne(
       { email },
-      { email: 1, role: 1, password: 1 }
+      { email: 1, role: 1 }
     )
     if (!isUserExist) {
       throw new ApiErrors(404, 'User not found')
@@ -78,7 +82,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
     // Generate new token
     const newAccessToken = createJsonWebToken(
-      { id: isUserExist.email, role: isUserExist.role },
+      { email: isUserExist.email, role: isUserExist.role },
       config.jwt.secret as Secret,
       config.jwt.expires_in as string
     )

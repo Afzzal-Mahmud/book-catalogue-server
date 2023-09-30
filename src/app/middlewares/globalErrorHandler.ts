@@ -2,6 +2,7 @@ import { ErrorRequestHandler } from 'express'
 import { Error as MongooseError } from 'mongoose'
 import config from '../../config'
 import { ZodError } from 'zod'
+import { JsonWebTokenError } from 'jsonwebtoken'
 import { IGenericErrorMessages } from '../../interfaces/genericErrorMessage.interface'
 import ApiErrors from '../../errors/ApiErrors'
 
@@ -18,7 +19,16 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res) => {
       message: error.message,
       stack: error?.stack,
     }))
-  } else if (err instanceof ZodError) {
+  } else if (err instanceof JsonWebTokenError) {
+    statusCode = 401
+    message = 'Json Webtoken Error'
+    errorMessages.push({
+      path: "jwt path",
+      message: `JWT Error: ${err.message}`,
+      stack: err?.stack,
+    })
+  }
+  else if (err instanceof ZodError) {
     statusCode = 400
     message = 'Zod Error'
     /*valuesFromZodErr returns array of object so, 
