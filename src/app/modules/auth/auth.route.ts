@@ -23,7 +23,7 @@ router.post('/logout', authControllers.logOut)
 
 router.post(
   '/refresh-token',
-  validateZodRequest(authValidation.refreshTokenZodSchema),
+  // validateZodRequest(authValidation.refreshTokenZodSchema),
   authControllers.refreshToken
 )
 

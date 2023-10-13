@@ -11,21 +11,20 @@ const bookZodSchema = z.object({
     genre: z.string({
       required_error: 'Genre is required',
     }),
-    publicationYear: z.number({
+    publicationYear: z.string({
       required_error: 'Publication year is required',
     }),
     details: z.string({
       required_error: 'Details are required',
     }),
-    price: z.number({
+    price: z.string({
       required_error: 'Price is required',
     }),
     image: z.string({
       required_error: 'Book Image is required',
     }),
-    reference: z.string({
-      required_error: 'Book reference is required',
-    }),
+    reference: z.string().optional(),
+    bookmark: z.boolean().optional(),
     review: z.array(z.string()).optional(),
   }),
 })
@@ -35,10 +34,13 @@ const bookZodSchemaOnUpdate = z.object({
     title: z.string().optional(),
     author: z.string().optional(),
     genre: z.string().optional(),
-    publicationYear: z.number().optional(),
+    publicationYear: z.string().optional(),
     details: z.string().optional(),
-    price: z.number().optional(),
+    price: z.string().optional(),
     image: z.string().optional(),
+    reference: z.string().optional(),
+    bookmark: z.boolean().optional(),
+    review: z.array(z.string()).optional()
   }),
 })
 const postBookReviewZodSchema = z.object({

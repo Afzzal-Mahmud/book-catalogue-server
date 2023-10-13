@@ -17,7 +17,6 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
   }
   res.cookie('refreshToken', refreshToken, cookieOptions)
-  res.cookie('userState', true)
   sendResponse<ILoginUserResponse>(res, {
     statusCode: 200,
     success: true,

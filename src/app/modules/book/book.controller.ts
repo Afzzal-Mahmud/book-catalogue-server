@@ -3,10 +3,10 @@ import { catchAsync } from '../../../shared/catchAsync'
 import { sendResponse } from '../../../shared/sendResponse'
 import { IBook } from './book.interface'
 import { bookServices } from './book.service'
-import ApiErrors from '../../../errors/ApiErrors'
 
 const createNewBook = catchAsync(async (req: Request, res: Response) => {
   const { ...bookData } = req.body
+  // const { refreshToken } = req.cookies
   const result = await bookServices.createNewBook(bookData)
 
   sendResponse<IBook>(res, {
@@ -55,6 +55,7 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
 
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id
+  // const { refreshToken } = req.cookies
   const updatedData = req.body
 
   const result = await bookServices.updateBookInfo(id, updatedData)
@@ -66,6 +67,19 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
     data: result,
   })
 })
+
+const deleteBook = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+
+  const result = await bookServices.deleteBook(id)
+  sendResponse<IBook>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Book deleted successfully',
+    data: result,
+  })
+})
+
 const postBookReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id
   const review = req.body
@@ -86,5 +100,6 @@ export const bookController = {
   getSingleBook,
   createNewBook,
   updateBook,
+  deleteBook,
   postBookReview,
 }

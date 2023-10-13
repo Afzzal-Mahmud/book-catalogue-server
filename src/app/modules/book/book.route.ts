@@ -25,11 +25,15 @@ router.post(
   bookController.postBookReview
 )
 
-
 router.patch(
   '/:id',
   validateZodRequest(bookValidation.bookZodSchemaOnUpdate),
   bookController.updateBook
+)
+
+router.delete(
+  '/:id',
+  bookController.deleteBook
 )
 
 export const bookRoutes = { router }
